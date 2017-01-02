@@ -1070,8 +1070,9 @@ function showForm(q) {
 	html += "<form onsubmit='return checkQuestion()'>";
 	html += showQuestion(test.currentId, q);
 	html += "<input type='submit' value='" + (test.currentId == test.questions.length ? "Grade" : "Next") + "'>";
-	document.getElementById("container").innerHTML = html;
 	html += "</form>";
+    html += "<div style='float: right'><a href='#' onclick='return showAll()'>Cheat!</a></div>";
+	document.getElementById("container").innerHTML = html;
 }
 
 function checkQuestion(form) { 
@@ -1114,6 +1115,7 @@ function showAll() {
         html += showQuestion(i, test.questions[test.ids[i]], test.questions[test.ids[i]]) + "<p/>";
     }
     out.innerHTML = html;
+    return false;
 }
 
 function pickTest() { 
