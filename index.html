@@ -989,8 +989,17 @@ var qa_g = [
 
 var qas = [ qa_a, qa_b, qa_c, qa_d, qa_e, qa_f, qa_g ];
 
-function Test(qaid) { 
-	this.questions = qas[qaid];
+function shuffle(arr) { 
+    for (var i = arr.length; i; i--) {
+        var j = Math.floor(Math.random() * i);
+        var x = arr[i - 1];
+        arr[i - 1] = arr[j];
+        arr[j] = x;
+    }
+}
+
+function Test(questions) { 
+	this.questions = questions;
 
 	this.answers = [];
 	this.ids = [];
@@ -1000,12 +1009,7 @@ function Test(qaid) {
 		for (var i = 0; i < this.questions.length; ++i) { 
 			this.ids.push(i);
 		}
-	    for (var i = this.ids.length; i; i--) {
-	        var j = Math.floor(Math.random() * i);
-	        var x = this.ids[i - 1];
-	        this.ids[i - 1] = this.ids[j];
-	        this.ids[j] = x;
-	    }
+        shuffle(this.ids);
 	}
 
 	this.currentId = -1;
@@ -1113,7 +1117,13 @@ function showAll() {
 }
 
 function pickTest() { 
-	test = new Test(document.getElementById("qa").value);
+    var qaid = document.getElementById("qa").value;
+    var count = document.getElementById("count").value;
+
+    var questions = qas[qaid];
+    shuffle(qas[qaid]);
+
+	test = new Test(questions.slice(0, count));
 	advanceQuestion(null);
 }
 </script>
@@ -1121,6 +1131,7 @@ function pickTest() {
 <body>
 	<div id="container">
         <div style="text-align: center">
+        <label for="qa">Test:</label>
         <select id="qa">
             <option value="0">QA 1</option>
             <option value="1">QA 2</option>
@@ -1130,10 +1141,17 @@ function pickTest() {
             <option value="5">QA 6</option>
             <option value="6">QA 7</option>
         </select>
+        <label for="count">Questions:</label>
+        <select name="count" id="count">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="75">75</option>
+            <option value="100">100</option>
+            <option value="135">135</option>
+        </select>
         <input type="button" onclick="pickTest()" value="Start" />
         </div>
     </div>
 </body>
 </html>
-
-
