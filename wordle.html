@@ -149,11 +149,16 @@ function loaded() {
     for (let i = 0; i < words.length; ++i) {
         words[i] = words[i].toUpperCase();
     }
+    const input = document.getElementById("in");
+    input.style.visibility = "visible";
+    input.focus();
+    input.style.visibility = "hidden";
 }
 </script>
 </head>
 <body onload="loaded()" onkeypress="process(event)" onkeydown="erase(event)">
     <div id="inputs" style="float: left"></div>
     <div id="matches" style="float: left"></div>
+    <input id="in" style="visibility: hidden">
 </body>
 </html>
