@@ -23,6 +23,9 @@ let words = [ "aback", "abase", "abate", "abbey", "abbot", "abhor", "abide", "ab
 let currentLetter = 0;
 
 function validate() {
+    const matches = document.getElementById("matches");
+    matches.innerHTML = "";
+
     const UNSET   = 0;
     const ABSENT  = 1;
     const PRESENT = 2;
@@ -70,9 +73,6 @@ function validate() {
         return;
     }
 
-    const matches = document.getElementById("matches");
-    matches.innerHTML = "";
-
     let absent = "";
     for (let i = 0; i < 26; ++i) {
         if (letters[i] == ABSENT) {
@@ -107,7 +107,7 @@ function getSlot() {
 }
 
 function process(e) {
-    const letter = e.key.toUpperCase();
+    const letter = String.fromCharCode(e.charCode).toUpperCase();
     const code = letter.charCodeAt(0);
     if (code >= 65 && code < 91) {
         getSlot().value = letter;
