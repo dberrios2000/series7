@@ -127,6 +127,7 @@ function erase(e) {
 }
 
 function cycle(e) {
+    edit();
     const styles = [
         "absent",
         "present",
@@ -149,11 +150,15 @@ function loaded() {
     for (let i = 0; i < words.length; ++i) {
         words[i] = words[i].toUpperCase();
     }
+}
+
+function edit() {
     const input = document.getElementById("in");
     input.style.visibility = "visible";
     input.focus();
     input.style.visibility = "hidden";
 }
+
 </script>
 </head>
 <body onload="loaded()" onkeypress="process(event)" onkeydown="erase(event)">
