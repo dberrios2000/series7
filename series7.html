@@ -27,4 +27,177 @@
 <script>
 var test = null;
 
+
+
+var qas = [ qa_a, qa_b, qa_c, qa_d, qa_e, qa_f, qa_g ];
+
+function shuffle(arr) { 
+    for (var i = arr.length; i; i--) {
+        var j = Math.floor(Math.random() * i);
+        var x = arr[i - 1];
+        arr[i - 1] = arr[j];
+        arr[j] = x;
+    }
+}
+
+function Test(questions) { 
+	this.questions = questions;
+
+	this.answers = [];
+	this.ids = [];
+
+	this.scramble = function() { 
+		this.ids = [];
+		for (var i = 0; i < this.questions.length; ++i) { 
+			this.ids.push(i);
+		}
+        shuffle(this.ids);
+	}
+
+	this.currentId = -1;
+
+	this.nextQuestion = function() { 
+		this.currentId++;
+		return this.getQuestion();
+	}
+
+	this.getQuestion = function() { 
+		if (this.currentId >= this.questions.length) { 
+			return null;
+		}		
+		return this.questions[this.ids[this.currentId]];
+	}
+
+	this.setAnswer = function(i) { 
+		this.answers.push(i);
+	}
+
+	this.grade = function() { 
+		var count = 0;
+		for (var i = 0; i < this.answers.length; ++i) { 
+			if (this.answers[i] == this.questions[this.ids[i]].answer) {
+				count++;
+			}
+		}
+		return { score: 100*count/this.answers.length, correct: count, total: this.questions.length };
+	}
+
+	this.scramble();
+}
+
+function showQuestion(id, q, checked) { 
+	var html = "";
+	html += "<div class='question'><b>" + (id+1) + " of " + test.questions.length + ")</b>&nbsp;" + q.text + "<p/>";
+	for (var i = 0; i < q.choices.length; ++i) { 
+	  var choiceClass = "";
+	  if (typeof(checked) != "undefined") { 
+	  	if (i == q.answer) { 
+	  		choiceClass = "correct";
+	  	} else if (checked == i && checked != q.answer) { 
+			choiceClass = "incorrect";
+	  	}
+	  }
+	  html += "<div class='" + choiceClass + "'><input type='radio' id='choice" + i + "' name='choice' value='" + i + "'>" + q.choices[i] + "<br></div>";
+	}
+	html += "<p/>";
+	if (typeof(checked) != "undefined") { 
+		html += "<div class='explanation'>" + q.explanation + "</div><p/>";
+	}
+    html += "</div>";
+	return html;
+}
+
+function showForm(q) { 
+	var html = "";
+	html += "<form onsubmit='return checkQuestion()'>";
+	html += showQuestion(test.currentId, q);
+	html += "<input type='submit' value='" + (test.currentId == test.questions.length ? "Grade" : "Next") + "'>";
+	html += "</form>";
+    html += "<div style='float: right'><a href='#' onclick='return showAll()'>Cheat!</a></div>";
+	document.getElementById("container").innerHTML = html;
+}
+
+function checkQuestion(form) { 
+	var any = false;
+	var q = test.getQuestion();
+	for (var i = 0; i < q.choices.length; ++i) { 
+		var choice = document.getElementById("choice" + i);
+		if (choice.checked) { 
+			test.setAnswer(i);
+			any = true;
+		}
+	}
+	if (!any) { 
+		alert("Pick something, silly...");
+		return false;
+	} 
+	advanceQuestion();
+	return false;
+}
+
+function advanceQuestion() { 
+	var q = test.nextQuestion();
+	if (q != null) { 
+		showForm(q);
+	} else { 
+		var grade = test.grade();
+		var out = document.getElementById("container");
+		var html = "You scored: " + parseFloat(grade.score).toFixed(0) + "%, " + grade.correct + "/" + grade.total + " correct.<p/>Reload the page to try again!<p/>";
+		for (var i = 0; i < test.ids.length; ++i) { 
+			html += showQuestion(i, test.questions[test.ids[i]], test.answers[i]) + "<p/>";
+		}
+		out.innerHTML = html;
+	}
+}
+
+function showAll() { 
+    var out = document.getElementById("container");
+    var html = "";
+    for (var i = 0; i < test.ids.length; ++i) { 
+        html += showQuestion(i, test.questions[test.ids[i]], test.questions[test.ids[i]]) + "<p/>";
+    }
+    out.innerHTML = html;
+    return false;
+}
+
+function pickTest() { 
+    var qaid = document.getElementById("qa").value;
+    var count = document.getElementById("count").value;
+
+    var questions = qas[qaid];
+    shuffle(qas[qaid]);
+
+	test = new Test(questions.slice(0, count));
+	advanceQuestion(null);
+}
+</script>
+</head>
+<body>
+	<div id="container">
+        <div style="text-align: center">
+        <label for="qa">Test:</label>
+        <select id="qa">
+            <option value="0">QA 1</option>
+            <option value="1">QA 2</option>
+            <option value="2">QA 3</option>
+            <option value="3">QA 4</option>
+            <option value="4">QA 5</option>
+            <option value="5">QA 6</option>
+            <option value="6">QA 7</option>
+        </select>
+        <label for="count">Questions:</label>
+        <select name="count" id="count">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="75">75</option>
+            <option value="100">100</option>
+            <option value="135">135</option>
+        </select>
+        <input type="button" onclick="pickTest()" value="Start" />
+        </div>
+    </div>
+</body>
+</html>
+
   
