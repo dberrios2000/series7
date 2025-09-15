@@ -27,8 +27,11 @@
 <script>
 var test = null;
 
-
-
+var qa_a = [
+    { text: "SEC Rule 610 sets a limit on access fees for quotations. The intent is to provide fair and equitable access to quotations for all market participants. Which of the following access fees is the maximum limit as specified in SEC Rule 610 for a stock priced at $12.00?", 
+	 choices: [ "$0.004","$0.003","$0.002","$0.001" ], 
+	 answer: 1, explanation: "According to SEC Rule 610, the dollar limit a market center can charge other market participants for accessing quotations is $0.003 for stocks priced at greater than or equal to $1.00. If the quote is less than $1.00, the access fee may not exceed 0.3% of the dollar value of the quote. The SEC believes that these are reasonable fees that will not limit market participants' fair and equitable access to quotations." },
+]
 var qas = [ qa_a, qa_b, qa_c, qa_d, qa_e, qa_f, qa_g ];
 
 function shuffle(arr) { 
